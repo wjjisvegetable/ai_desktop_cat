@@ -1,0 +1,33 @@
+DesktopCat 双板重建初稿验证记录
+
+代码检查环境：macOS arm64，Apple clang++，AddressSanitizer + UndefinedBehaviorSanitizer。
+
+1. 共享 CatCore.h 测试：通过
+串口帧编码和解码、每字节单比特损坏拒绝、缓冲区越界恢复、输入长度限制、脉宽上下限、方向反转、millis 溢出；10000 组解析输入未发现 sanitizer 报错。
+
+2. S3 主机模拟：通过
+直接包含实际 CatS3Controller.ino，以 tests/stubs 中的替身模拟硬件 API。
+检查默认不启用 PWM、空通道拒绝启动、未校准拒绝启动、动作所需通道、忙状态拒绝、每次 tick 脉宽变化不超过 4 us、停止保持、释放全部通道、动作回中位、状态恰有 8 路、校准非法参数及 5 秒试动超时。
+
+3. C5 主机模拟：通过
+直接包含实际 CatC5Display.ino，以替身模拟 BSP/LVGL。
+检查 MOOD/ACK、sleepy 眼形、5 秒串口超时退回本地、7 秒轮播、文本动作白名单、等待确认时拒绝普通动作、停止优先、ACK 及 1.5 秒确认超时。
+
+4. 材料核验
+PPT：20 页。APK：读取 assets/index.html，按其实际 API 和 8 路状态约定编写。
+最终 3MF：第一盘 10 个对象，第二盘 9 个对象；包围盒提取至 CSV。未检查网格水密性、切片质量、强度或实物公差。
+
+5. 新增 BLE 协议与对话代理主机测试：通过
+BLE 文本解析覆盖令牌、动作/表情白名单及 arm 拒绝。Node.js 代理测试覆盖未授权拒绝、历史消息转发、非法角色拒绝、只把当前输入的精确短句映射为动作，以及 store:false 请求设置。
+
+6. Android APK 编译：通过
+使用 Android SDK Platform 35、Build-Tools 35、Gradle 8.10.2 和完整 JDK 23 执行 assembleDebug。生成 com.desktopcat.blevoice 0.2.0 调试签名 APK，minSdk 26、targetSdk 35；apksigner v2 验证与 zipalign 校验均通过。新旧调试包使用相同签名证书，可在保留应用数据的前提下升级；手机上的实际升级安装仍未测试。新版 HTML 已完成语法与 ID 引用检查，并在桌面浏览器预览了控制、蓝牙与对话界面。
+
+尚未验证
+- 未安装完成 ESP32 完整工具链，且官方板级库下载受网络限制，未进行 Arduino-ESP32 真实目标编译。
+- 未连接实物，未烧录固件，未验证 GPIO、舵机限位、Wi-Fi 或 UART 电气链路。
+- 未验证 ST7789V2 实屏方向、色序、触摸或 ES8311 回放；音频诊断默认关闭。
+- 新 Android App 尚未在手机安装或实测；新 BLE GATT 固件尚未烧录实连。用户口述曾完成 BLE 与 App 的分模块连接测试，该历史结果不等于本仓库代码的实测结果。
+- 新云端文字对话代理已实现但尚未使用真实 API key 调用；手机语音识别、TTS 与本机对话记录逻辑尚未手机实测。C5 板载云端录音与播报尚未实现。
+
+模拟测试只证明所覆盖的业务逻辑，不验证官方库 API 的二进制或硬件行为。不能将本记录写成整机测试通过。

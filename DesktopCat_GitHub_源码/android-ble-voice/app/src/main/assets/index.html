@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>桌面招财猫</title>
+<style>
+:root{--ink:#183544;--muted:#718590;--teal:#137d88;--mint:#d8f5ed;--cream:#fbfcf8;--line:#dce9e8;--coral:#b9574e;--pale:#f4ebe4}
+*{box-sizing:border-box}body{margin:0;background:#eaf1f0;color:var(--ink);font:15px/1.5 system-ui,-apple-system,"PingFang SC",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}button:disabled{opacity:.45;cursor:default}
+.shell{max-width:560px;margin:auto;min-height:100vh;background:var(--cream);padding:0 18px 108px;box-shadow:0 0 50px #123b4012}
+.hero{margin:0 -18px 18px;padding:38px 22px 24px;background:linear-gradient(135deg,#173d4b,#266d76 72%,#428c8d);color:white;border-radius:0 0 28px 28px;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:180px}
+.eyebrow{font-size:11px;letter-spacing:.18em;font-weight:750;opacity:.72}.hero h1{font-size:28px;line-height:1.12;margin:7px 0 8px;letter-spacing:.02em}.hero p{font-size:13px;opacity:.84;margin:0}
+.cat{width:108px;min-width:108px;filter:drop-shadow(0 9px 9px #001b2240)}
+.tab-chat .hero{min-height:124px;padding-top:25px;padding-bottom:17px}.tab-chat .hero h1{font-size:24px}.tab-chat .cat{width:76px;min-width:76px}
+.tabs{position:fixed;z-index:8;bottom:0;left:50%;transform:translateX(-50%);width:min(560px,100%);display:grid;grid-template-columns:repeat(3,1fr);background:#fffcf7f2;backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:7px 12px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px #173d4b12}
+.tabs button{background:transparent;color:#758995;border-radius:12px;padding:7px 2px;font-size:12px;font-weight:700}.tabs button .icon{display:block;font-size:20px;line-height:24px}.tabs button.active{background:#e6f4f1;color:#116a72}
+.page{display:none}.page.active{display:block}.section-title{font-size:18px;margin:24px 2px 12px;display:flex;justify-content:space-between;align-items:center}.section-title small{font-size:11px;color:var(--muted);font-weight:500}
+.card{background:white;border:1px solid var(--line);border-radius:20px;padding:17px;margin-bottom:13px;box-shadow:0 7px 24px #143e4309}.card.soft{background:#f3f9f7}
+.row{display:flex;gap:9px;align-items:center}.row>*{min-width:0}.grow{flex:1}.row.wrap{flex-wrap:wrap}
+input,select,textarea{width:100%;border:1px solid #d4e3e2;border-radius:13px;background:#fff;color:var(--ink);padding:12px 13px;outline:0}input:focus,select:focus,textarea:focus{border-color:#51aeb0;box-shadow:0 0 0 3px #70c7c83b}textarea{min-height:72px;resize:vertical}
+label{display:block;font-size:12px;font-weight:700;color:#526d77;margin:0 0 7px}.field{margin:12px 0}.field:first-child{margin-top:0}
+.btn{border-radius:13px;background:#e9f2f1;color:#205764;padding:11px 14px;font-weight:730;min-height:44px;white-space:nowrap}.btn.primary{background:#127b86;color:white}.btn.dark{background:#204657;color:white}.btn.danger{background:#fbeae7;color:#aa4e45}.btn.ghost{background:transparent;border:1px solid #cbdedc}.btn.tiny{font-size:12px;padding:7px 9px;min-height:32px}.btn.full{width:100%}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:5px 9px;background:#edf2f1;color:#718891;font-size:11px;font-weight:750}.badge.online{background:#dcf4e9;color:#187452}.dot{width:7px;height:7px;background:currentColor;border-radius:50%}
+.status-row{display:flex;align-items:center;justify-content:space-between;gap:10px}.status-row strong{font-size:16px}.hint{font-size:12px;color:var(--muted);line-height:1.65;margin:9px 0 0}.hint.warn{color:#a15a4e}
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}.metric{border-radius:12px;padding:11px;background:#f4f8f8}.metric b{display:block;font-size:15px}.metric span{font-size:11px;color:var(--muted)}
+.segmented{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#eaf2f1;border-radius:14px;padding:4px;margin-bottom:13px}.segmented button{background:transparent;color:#66828a;border-radius:11px;padding:9px;font-weight:750}.segmented button.active{background:white;color:#146d76;box-shadow:0 2px 8px #183b4815}
+.action-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.action{display:flex;align-items:center;gap:9px;text-align:left;background:#f2f8f7;border:1px solid #e2eeee;border-radius:15px;padding:13px;font-weight:750;color:#205465;min-height:62px}.action .sym{font-size:24px}.action:active,.btn:active{transform:scale(.98)}
+.moods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mood{background:#f3f8f7;color:#315c65;border-radius:13px;padding:11px 3px;min-height:45px;font-weight:720;border:1px solid #e0ebea}.mood.active{background:#d9f2ed;color:#0e6d76;border-color:#6fc9c4}
+.divider{height:1px;background:var(--line);margin:15px 0}.notice{border-radius:13px;padding:11px 13px;background:#e8f5f2;color:#216272;font-size:12px;line-height:1.6;margin:12px 0}.notice.error{background:#fff0eb;color:#9f4f48}
+.chat-list{height:min(20vh,180px);min-height:110px;overflow:auto;display:flex;flex-direction:column;gap:9px;padding:4px 0 8px}.bubble{max-width:88%;padding:10px 13px;border-radius:15px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}.bubble.user{align-self:flex-end;background:#187e87;color:white;border-bottom-right-radius:4px}.bubble.assistant{align-self:flex-start;background:#eff5f2;color:#23444e;border-bottom-left-radius:4px}.empty{font-size:13px;color:#8999a2;text-align:center;margin:auto}
+.log{white-space:pre-wrap;overflow-wrap:anywhere;background:#183a45;color:#d8f2f0;font:11px/1.6 ui-monospace,monospace;border-radius:12px;padding:12px;max-height:180px;overflow:auto}.checks{display:flex;gap:10px;align-items:center;margin-top:10px;color:#496873;font-size:12px}.checks input{width:auto}
+details summary{font-size:13px;color:#3c7180;cursor:pointer;font-weight:700}details .inner{padding-top:12px}
+.dialog-wrap{position:fixed;inset:0;background:#092b36a8;z-index:30;display:grid;place-items:center;padding:22px}.dialog-wrap[hidden]{display:none}.dialog{width:min(380px,100%);background:white;border-radius:22px;padding:23px;box-shadow:0 15px 60px #062d3340}.dialog h2{margin:0 0 8px}.dialog p{color:#56717b;line-height:1.65}.dialog .row>*{flex:1}
+</style></head><body>
+<div class="shell">
+ <div class="hero"><div><div class="eyebrow">DESKTOP CAT / CONTROL</div><h1>桌面招财猫</h1><p>陪你说话，也会用动作回应</p></div>
+ <svg class="cat" viewBox="0 0 120 120" aria-hidden="true"><path d="M20 46 22 12 49 30h22l27-18 2 34a43 43 0 1 1-80 0" fill="#fff8e9"/><path d="m31 35-1-13 13 11m34 0 13-11-1 13" fill="#e2aaa0"/><ellipse cx="45" cy="63" rx="5" ry="8" fill="#264955"/><ellipse cx="76" cy="63" rx="5" ry="8" fill="#264955"/><path d="m55 80 5 4 5-4m-5 4v5m0 0c-4 7-11 6-13 1m13-1c4 7 11 6 13 1" stroke="#264955" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="30" cy="78" rx="8" ry="5" fill="#f5c1b5"/><ellipse cx="90" cy="78" rx="8" ry="5" fill="#f5c1b5"/></svg></div>
+ <div id="notice" class="notice" role="status">先连接主板 Wi-Fi 或 BLE；云端对话需要电脑代理。</div>
+ <section class="page active" id="page-control">
+  <h2 class="section-title">设备连接 <span id="wifiBadge" class="badge"><i class="dot"></i> Wi-Fi 未连接</span></h2>
+  <div class="card"><label for="boardAddress">主板地址</label><div class="row"><input id="boardAddress" value="http://192.168.4.1" inputmode="url" spellcheck="false"><button id="wifiConnect" class="btn primary">连接</button></div><div class="row wrap" style="margin-top:10px"><button id="wifiSettings" class="btn tiny ghost">打开 Wi-Fi 设置</button><button id="wifiDisconnect" class="btn tiny ghost">断开</button><button id="calibration" class="btn tiny ghost">校准页面 ↗</button></div>
+   <div class="metrics"><div class="metric"><span>舵机</span><b id="servoState">未读取</b></div><div class="metric"><span>动作</span><b id="actionState">未读取</b></div><div class="metric"><span>光线</span><b id="lightState">未读取</b></div><div class="metric"><span>已接通通道</span><b id="channelState">—</b></div></div></div>
+  <h2 class="section-title">动作控制 <small>选择传输方式</small></h2>
+  <div class="segmented"><button class="active" data-transport="wifi">Wi-Fi 遥控</button><button data-transport="ble">BLE 遥控</button></div>
+  <div class="card"><div class="action-grid"><button class="action" data-action="nod"><span class="sym">↕</span>点头</button><button class="action" data-action="shake"><span class="sym">↔</span>摇头</button><button class="action" data-action="wave"><span class="sym">✦</span>招手</button><button class="action" data-action="ears"><span class="sym">⌃</span>动耳朵</button></div>
+   <div class="row" style="margin-top:9px"><button class="btn danger grow" data-action="stop">停止并保持</button><button class="btn grow" data-action="center">缓慢回中</button></div><div class="divider"></div><div class="row"><button id="arm" class="btn primary grow">启动已校准舵机</button><button id="release" class="btn danger grow">关闭 PWM</button></div><p class="hint warn">启动和校准仅通过 Wi-Fi。停止保持当前姿态；关闭 PWM 后机构可能失去支撑。</p></div>
+  <h2 class="section-title">表情选择 <small>发送给主板屏幕</small></h2><div class="card"><div class="moods"><button class="mood" data-mood="happy">开心</button><button class="mood" data-mood="curious">好奇</button><button class="mood" data-mood="sleepy">困倦</button><button class="mood" data-mood="angry">生气</button><button class="mood" data-mood="neutral">平静</button><button class="mood active" data-mood="auto">自动</button></div><p class="hint">C5 屏幕需与 S3 串口接通后才会同步表情。</p></div>
+  <details class="card"><summary>语音动作指令</summary><div class="inner"><label for="voiceActionInput">识别结果</label><div class="row"><input id="voiceActionInput" placeholder="点头、摇头、招手、动耳朵、停止"><button id="voiceActionMic" class="btn">🎙 识别</button></div><button id="sendVoiceAction" class="btn primary full" style="margin-top:10px">核对后发送动作</button><p class="hint">仅识别完整的预设短句；语音识别后先核对文字。</p></div></details>
+  <details class="card"><summary>连接与指令记录</summary><div class="inner"><div id="log" class="log">尚无记录</div></div></details>
+ </section>
+ <section class="page" id="page-ble"><h2 class="section-title">蓝牙连接 <span id="bleBadge" class="badge"><i class="dot"></i> 未连接</span></h2><div class="card soft"><strong>DesktopCat-S3</strong><p class="hint">在附近扫描并连接 S3。需使用仓库固件，旧 APK 的 BLE 页面不会自动启用。</p><div class="field"><label for="bleToken">BLE 控制令牌</label><input id="bleToken" type="password" placeholder="与 S3 Secrets.h 一致" autocomplete="off"></div><div class="row"><button id="bleConnect" class="btn primary grow">扫描并连接</button><button id="bleDisconnect" class="btn ghost">断开</button></div><div id="bleDetail" class="notice">尚未扫描。连接后可在“控制”页选择 BLE 遥控。</div></div><div class="card"><strong>连接说明</strong><p class="hint">BLE 可发送动作与表情，不提供舵机启动和校准。请先通过 Wi-Fi 完成校准和启动，再切换 BLE 控制。令牌不会保存在手机中。</p></div></section>
+ <section class="page" id="page-chat"><h2 class="section-title">云端对话 <span class="badge online"><i class="dot"></i> 手机语音</span></h2><div class="card"><details id="cloudSettings"><summary>代理设置</summary><div class="inner"><div class="field"><label for="proxyUrl">电脑代理地址</label><input id="proxyUrl" value="http://192.168.1.20:8787" inputmode="url" spellcheck="false"></div><div class="field"><label for="proxyToken">代理令牌</label><input id="proxyToken" type="password" placeholder="DESKTOPCAT_PROXY_TOKEN" autocomplete="off"></div><p class="hint">OpenAI API key 只配置在电脑代理，不输入手机 App。手机与电脑需在同一可信局域网。</p></div></details></div>
+  <div class="card"><div class="status-row"><strong>对话记录</strong><button id="clearChat" class="btn tiny ghost">清空</button></div><div id="chatList" class="chat-list"><div class="empty">和招财猫说句话吧</div></div><div class="field"><label for="chatInput">想说什么？</label><textarea id="chatInput" placeholder="输入消息；语音识别后先核对文字，再发送"></textarea></div><div class="row"><button id="mic" class="btn grow">🎙 语音输入</button><button id="sendChat" class="btn primary grow">发送消息</button></div><label class="checks"><input id="autoSpeak" type="checkbox" checked> 自动朗读回复</label><p class="hint">最近 20 条消息仅存在本机，并随下一次提问发送给代理。动作短句需再次确认才会执行。</p></div>
+  <div class="card soft"><strong>快速动作短句</strong><p class="hint">输入“点头”“摇头”“招手”“动耳朵”“停止”等完整短句，云端回复后可确认是否控制设备。</p></div>
+ </section>
+</div>
+<nav class="tabs" aria-label="主导航"><button class="active" data-tab="control"><span class="icon">⌂</span>控制</button><button data-tab="ble"><span class="icon">⌁</span>蓝牙</button><button data-tab="chat"><span class="icon">◌</span>对话</button></nav>
+<div id="dialogWrap" class="dialog-wrap" hidden><div class="dialog" role="dialog" aria-modal="true"><h2 id="dialogTitle">确认操作</h2><p id="dialogMessage"></p><div class="row"><button id="dialogCancel" class="btn ghost">取消</button><button id="dialogOk" class="btn primary">确认</button></div></div></div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), native=window.CatNative;
+let transport='wifi', wifiWanted=false,wifiReady=false,bleReady=false,boardBase='',lastStatus=null,busy=false,requestSeq=0,confirmResolve=null,chatBusy=false,speechMode='chat';
+const requests=new Map(),logs=[];let history=[];
+const actionNames={idle:'待机',nod:'点头',shake:'摇头',wave:'招手',wave_right:'右爪招手',both:'双爪招手',ears:'动耳朵',center:'回中位',dance:'组合动作'};
+try{$('boardAddress').value=localStorage.getItem('catBoard')||'http://192.168.4.1';$('proxyUrl').value=localStorage.getItem('catProxy')||'http://192.168.1.20:8787';const saved=JSON.parse(localStorage.getItem('catHistory')||'[]');if(Array.isArray(saved))history=saved.filter(x=>x&&['user','assistant'].includes(x.role)&&typeof x.content==='string').slice(-20);}catch(e){}
+function notice(s,bad=false){$('notice').textContent=s;$('notice').classList.toggle('error',bad)}
+function log(s){logs.unshift(new Date().toLocaleTimeString()+'  '+s);logs.splice(18);$('log').textContent=logs.join('\n')}
+function validBase(raw){const u=new URL(raw.includes('://')?raw:'http://'+raw);const p=u.hostname.split('.').map(Number);if(u.protocol!=='http:'||u.username||u.password||u.pathname!=='/'||u.search||u.hash||p.length!==4||!/^[0-9.]+$/.test(u.hostname)||p.some(n=>!Number.isInteger(n)||n<0||n>255)||!(p[0]===10||(p[0]===172&&p[1]>=16&&p[1]<=31)||(p[0]===192&&p[1]===168)))throw Error('请填写局域网 IPv4 地址');return u.origin}
+function tab(name){document.body.classList.toggle('tab-chat',name==='chat');document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+name));window.scrollTo(0,0)}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+function refreshUi(){
+ $('wifiBadge').innerHTML='<i class="dot"></i> '+(wifiReady?'Wi-Fi 已连接':'Wi-Fi 未连接');$('wifiBadge').classList.toggle('online',wifiReady);
+ $('bleBadge').innerHTML='<i class="dot"></i> '+(bleReady?'BLE 已连接':'未连接');$('bleBadge').classList.toggle('online',bleReady);
+ document.querySelectorAll('[data-transport]').forEach(b=>b.classList.toggle('active',b.dataset.transport===transport));
+ const canControl=transport==='wifi'?wifiReady:bleReady;
+ document.querySelectorAll('[data-action]').forEach(b=>b.disabled=!canControl||busy||(transport==='wifi'&&b.dataset.action!=='stop'&&!lastStatus?.armed));
+ document.querySelectorAll('[data-mood]').forEach(b=>b.disabled=!canControl||busy);
+ $('arm').disabled=!wifiReady||busy||!!lastStatus?.armed;$('release').disabled=!wifiReady||busy;
+ $('wifiConnect').disabled=wifiWanted;$('wifiDisconnect').disabled=!wifiWanted;
+ $('bleConnect').disabled=bleReady;$('bleDisconnect').disabled=!bleReady;
+}
+document.querySelectorAll('[data-transport]').forEach(b=>b.onclick=()=>{transport=b.dataset.transport;refreshUi();notice('当前使用 '+(transport==='wifi'?'Wi-Fi':'BLE')+' 控制动作和表情。')});
+function request(base,path,method='GET',body='') {return new Promise((resolve,reject)=>{if(!native){reject(Error('请在 Android App 中使用'));return}const id=String(++requestSeq),timer=setTimeout(()=>{requests.delete(id);reject(Error('请求超时'))},9000);requests.set(id,{resolve,reject,timer});native.request(id,base,path,method,body)})}
+window.onHttpReply=(id,status,text)=>{const p=requests.get(String(id));if(!p)return;clearTimeout(p.timer);requests.delete(String(id));if(status>=200&&status<300)p.resolve(text);else p.reject(Error(text||'HTTP '+status))};
+async function wifiStatus(){if(!wifiWanted)return;try{const s=JSON.parse(await request(boardBase,'/api/status'));if(typeof s.armed!=='boolean'||typeof s.dark!=='boolean'||typeof s.action!=='string'||!Array.isArray(s.servos)||s.servos.length!==8)throw Error('主板固件状态格式不匹配');wifiReady=true;lastStatus=s;$('servoState').textContent=s.armed?'已启动':'未启动';$('actionState').textContent=actionNames[s.action]||s.action;$('lightState').textContent=s.dark?'暗':'亮';$('channelState').textContent=s.servos.filter(x=>x.attached).length+' / 8';refreshUi()}catch(e){wifiReady=false;lastStatus=null;refreshUi();notice('主板状态读取失败：'+e.message,true)}}
+$('wifiConnect').onclick=async()=>{try{boardBase=validBase($('boardAddress').value.trim());localStorage.setItem('catBoard',boardBase)}catch(e){notice(e.message,true);return}wifiWanted=true;refreshUi();notice('正在连接主板…');await wifiStatus();if(wifiReady){notice('主板已连接，可以查看状态并控制。');log('Wi-Fi 主板已连接')}else wifiWanted=false;refreshUi()};
+$('wifiDisconnect').onclick=()=>{wifiWanted=false;wifiReady=false;lastStatus=null;refreshUi();notice('已断开 Wi-Fi 状态读取；主板动作不会自动停止。')};
+$('wifiSettings').onclick=()=>native?.wifiSettings();
+$('calibration').onclick=()=>{try{native?.calibration(validBase($('boardAddress').value.trim()))}catch(e){notice(e.message,true)}};
+setInterval(()=>{if(wifiWanted&&!busy)wifiStatus()},2000);
+function confirm(title,message){$('dialogTitle').textContent=title;$('dialogMessage').textContent=message;$('dialogWrap').hidden=false;return new Promise(r=>confirmResolve=r)}
+function closeConfirm(answer){$('dialogWrap').hidden=true;const r=confirmResolve;confirmResolve=null;if(r)r(answer)}
+$('dialogCancel').onclick=()=>closeConfirm(false);$('dialogOk').onclick=()=>closeConfirm(true);
+async function wifiCommand(path,name){if(!wifiReady){notice('请先连接主板 Wi-Fi。',true);return}if(busy&&name!=='stop')return;busy=true;refreshUi();try{const result=await request(boardBase,path,'POST','name='+encodeURIComponent(name));log(name+'：'+result);notice(result);await wifiStatus()}catch(e){notice('指令结果未知：'+e.message,true);log(name+'：'+e.message)}finally{busy=false;refreshUi()}}
+function bleCommand(kind,name){if(!bleReady){notice('请先连接 BLE。',true);return}const token=$('bleToken').value.trim();if(token.length<16||token.length>40){notice('BLE 令牌需要 16–40 字符。',true);return}native.bleWrite(token+'|'+kind+':'+name);notice('BLE 指令已发送，等待主板回执。')}
+function action(name){if(transport==='ble')bleCommand('A',name);else wifiCommand('/api/action',name)}
+document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>action(b.dataset.action));
+$('arm').onclick=async()=>{if(await confirm('启动舵机','请确认所有启用通道已逐路校准，舵盘没有顶住机械结构。'))wifiCommand('/api/action','arm')};
+$('release').onclick=async()=>{if(await confirm('关闭 PWM','关闭后头部或前爪可能失去保持力，请先扶稳。'))wifiCommand('/api/action','release')};
+document.querySelectorAll('[data-mood]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-mood]').forEach(x=>x.classList.toggle('active',x===b));if(transport==='ble')bleCommand('M',b.dataset.mood);else wifiCommand('/api/mood',b.dataset.mood)});
+$('bleConnect').onclick=()=>native?.bleConnect();$('bleDisconnect').onclick=()=>native?.bleDisconnect();
+window.onBleState=(state,detail)=>{bleReady=state==='ready';$('bleDetail').textContent=detail;refreshUi();log('BLE：'+detail);if(state==='error')notice(detail,true)};
+window.onBleReply=text=>{log('BLE 回执：'+text);notice('主板回执：'+text,text.startsWith('ERR:'))};
+window.onSpeechText=text=>{if(speechMode==='action'){$('voiceActionInput').value=text;tab('control')}else{$('chatInput').value=text;tab('chat')}notice('语音已转文字，请核对后点击发送。')};
+window.onNativeNotice=text=>notice(text,true);
+$('mic').onclick=()=>{speechMode='chat';native?.recognizeSpeech()};
+$('voiceActionMic').onclick=()=>{speechMode='action';native?.recognizeSpeech()};
+$('sendVoiceAction').onclick=()=>{const spoken=$('voiceActionInput').value.trim().replace(/[。！!？?]+$/,'');const map={'点头':'nod','点点头':'nod','摇头':'shake','招手':'wave','动耳朵':'ears','停止':'stop'};if(!Object.prototype.hasOwnProperty.call(map,spoken)){notice('请使用完整短句：点头、摇头、招手、动耳朵或停止。',true);return}if(transport==='wifi'&&map[spoken]!=='stop'&&!lastStatus?.armed){notice('请先校准并启动舵机。',true);return}action(map[spoken])};
+function renderChat(){const box=$('chatList');box.replaceChildren();if(!history.length){const e=document.createElement('div');e.className='empty';e.textContent='和招财猫说句话吧';box.append(e);return}history.forEach(x=>{const b=document.createElement('div');b.className='bubble '+x.role;b.textContent=x.content;box.append(b)});box.scrollTop=box.scrollHeight}
+function saveChat(){history=history.slice(-20);localStorage.setItem('catHistory',JSON.stringify(history));renderChat()}
+$('clearChat').onclick=async()=>{if(await confirm('清空记录','删除手机本地保存的对话记录？')){history=[];saveChat();notice('本机对话记录已清空。')}};
+const cloudPending=new Map();
+window.onCloudReply=(id,status,body)=>{const p=cloudPending.get(String(id));if(!p)return;clearTimeout(p.timer);cloudPending.delete(String(id));if(status>=200&&status<300)p.resolve(body);else p.reject(Error(body))};
+async function sendChat(){if(chatBusy)return;const text=$('chatInput').value.trim();if(!text){notice('请先输入消息。',true);return}let url;try{url=validBase($('proxyUrl').value.trim())}catch(e){notice('代理地址错误：'+e.message,true);$('cloudSettings').open=true;return}const token=$('proxyToken').value;if(token.length<16){notice('请填写至少 16 字符的代理令牌。',true);$('cloudSettings').open=true;return}localStorage.setItem('catProxy',url);if(!native){notice('请在 Android App 中使用云端对话。',true);return}chatBusy=true;$('sendChat').disabled=true;notice('云端正在回复…');const prior=history.slice(-20),id=String(++requestSeq);
+ try{const raw=await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{cloudPending.delete(id);reject(Error('云端请求超时'))},40000);cloudPending.set(id,{resolve,reject,timer});native.askCloud(id,url,token,JSON.stringify({text,history:prior}))});const data=JSON.parse(raw);if(!data.reply)throw Error('云端未返回文字');history.push({role:'user',content:text},{role:'assistant',content:data.reply});saveChat();$('chatInput').value='';notice('收到云端回复。');if($('autoSpeak').checked)native.speak(data.reply);if(data.action&&await confirm('执行动作？','识别到动作“'+(actionNames[data.action]||data.action)+'”。确认通过 '+(transport==='wifi'?'Wi-Fi':'BLE')+' 发送？'))action(data.action)}catch(e){let msg=e.message;try{msg=JSON.parse(msg).error||msg}catch(_){}notice('云端对话失败：'+msg,true)}finally{chatBusy=false;$('sendChat').disabled=false}}
+$('sendChat').onclick=sendChat;renderChat();refreshUi();
+})();
+</script></body></html>
